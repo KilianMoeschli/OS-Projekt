@@ -1,0 +1,126 @@
+---
+title: "Mein OS Projekt_Kilian"
+format: html
+editor: visual
+---
+
+## Einfluss von Fitness-Social-Media auf Trainingsmotivation
+
+Es soll untersucht werden, wie sich der Konsum von Fitness-Influencer\*innen auf Social Media auf die Trainingsmotivation und das Körperbild junger Erwachsener auswirkt. Plattformen wie Instagram und TikTok vermitteln zahlreiche Fitnessideale, die sowohl motivierend als auch belastend wirken können.
+
+Die **Forschungsfrage** lautet daher, ob Fitness-Content gleichzeitig Motivation steigern und Körperzufriedenheit verringern kann.
+
+Geplant ist eine Online-Befragung mit ca. 100 Teilnehmenden im Alter von 18 bis 25 Jahren. Erfasst werden:
+
+-   Häufigkeit des Konsums von Fitness-Content,
+
+-   Trainingsmotivation (z. B. intrinsisch vs. extrinsisch)
+
+-   Körperzufriedenheit und sozialer Vergleich.
+
+**Hypothese1**: Häufiger Konsum von Fitness-Influencer\*innen hängt mit höherer Trainingsmotivation zussammen
+
+**Hypothese 2**: Häufiger Konsum von Fitness-Infleuncer\*innen hängt mit geringerer Zufriedenheit mit dem eigenen Körper zusammen.
+
+**Umsetzung und Bedeutung**
+
+Das Projekt trägt damit dazu bei, die Rolle von Social Media im Fitnesskontext differenziert zu verstehen und legt Wert auf Nachvollziehbarkeit, Transparenz und öffentliche Zugänglichkeit.
+
+-   **Stichprobe:** 100 Personen, 18–25 Jahre, die Sport machen oder gerne anfangen würden
+-   **Erhebungsmethode:** Online-Umfrage (z. B. über LimeSurvey)
+-   **Dauer:** 15 Minuten
+-   **Variablen:**
+
+```         
+-    Social Media Nutzung (Wie oft? Welche Plattformen? Welcher Fitness-Content?)
+
+-    Motivation zum Sport (mit „Sport Motivation Scale“)
+
+-    Körperzufriedenheit (Body Satisfaction Scale)
+
+-    Wohlbefinden (4–6 Item Index)
+```
+
+### 
+
+## Code
+
+```{r}
+#1) Lade Daten --------------------------------------------------------------
+
+#Quarto installieren
+
+#Die Datei sollte im selben Ordner wie dieses Quarto-Dokument liegen.
+
+#Keine absoluten Pfade 
+
+data <- read.csv("fitspiration.csv", header = TRUE, stringsAsFactors = FALSE)
+
+#2) Dokumentiere Variablen --------------------------------------------------
+
+#social_media_use = Zeit pro Tag, die man Fitness-Influencer*innen sieht
+
+#motivation_score = Motivation Sport zu treiben (0-100)
+
+#body_satisfaction = Zufriedenheit mit dem eigenen Körper (0-100)
+
+#Extrahierte Variablen: 
+social_media_use <- data$social_media_use
+motivation_score <- data$motivation_score 
+body_satisfaction <- data$body_satisfaction
+
+#3) Umgang mit fehlenden Werten ---------------------------------------------
+
+#jede Datenbereinigung wird dokumentiert.
+
+valid <- complete.cases(social_media_use, motivation_score, body_satisfaction)
+
+social_media_use <- social_media_use[valid]
+motivation_score <- motivation_score[valid]
+body_satisfaction <- body_satisfaction[valid]
+
+#4) Deskriptive Statistik -------------------------------------------------
+
+#Zum Überblick und Beschreibung der Daten.
+
+summary(social_media_use) 
+summary(motivation_score) 
+summary(body_satisfaction)
+
+#5) Hypothesentests (Korrelationen) -----------------------------------------
+
+#Hypothese 1: Mehr Fitness-Content → höhere Motivation?
+
+cor.test(social_media_use, motivation_score)
+
+#Hypothese 2: Mehr Fitness-Content → geringere Körperzufriedenheit?
+
+cor.test(social_media_use, body_satisfaction)
+
+#6) Grafische Darstellung ------------------------------
+
+#Motivation
+plot(social_media_use, motivation_score, 
+     main="Social Media (Fitness) & Trainingsmotivation", 
+     xlab="Fitness-Content pro Tag (Minuten)", 
+     ylab="Motivation (0-100)", pch=19); 
+abline(lm(motivation_score ~ social_media_use), col="red", lwd=2)
+
+#Körperzufriedenheit
+plot(social_media_use, body_satisfaction, 
+     main="Social Media (Fitness) & Körperzufriedenheit", 
+     xlab="Fitness-Content pro Tag (Minuten)", 
+     ylab="Körperzufriedenheit (0-100)", pch=19); 
+abline(lm(body_satisfaction ~ social_media_use), col="blue", lwd=2)
+
+#7) Reproduzierbarkeit prüfen -----------------------------------------------
+
+#Pakete unnd Software Versionen
+
+sessionInfo()
+#R version 4.5.2 (2025-10-31 ucrt)
+#Platform: x86_64-w64-mingw32/x64
+#Running under: Windows 11 x64 (build 26100)
+
+
+```
